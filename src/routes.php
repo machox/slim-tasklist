@@ -207,15 +207,32 @@ $app->group('/api', function (){
 
 		//list task
         $this->get('/tasks', function ($request, $response, $args) {
+			$params = $request->getQueryParams();
         	$auth = $request->getAttribute('user');
 			$user = Model::factory('User')->find_one($auth->user_id);
-			$tasks = $user->tasks()->find_array();
+			$count = $user->tasks()->count();
+			$offset = 0;
+			if(isset($params['offset']) && is_numeric($params['offset'])) {
+				$offset = $params['offset'];
+			}
+			$limit = $count;
+			if(isset($params['limit']) && is_numeric($params['limit'])) {
+				$limit = $params['limit'];
+			}
+			$tasks = $user->tasks()->limit($limit)->offset($offset)->find_array();
 			$res = [
 				'status' => [
 					'code' => 200, 
 					'error' => false, 
 					'message' => 'ok'
 					],
+				'metadata' => [
+					'resultset' => [
+					'count' => $count,
+					'offset' => $offset,
+					'limit' => $limit
+					]
+				],
 				'results' => $tasks
 				];
 		 	return $this->view->render($response, $res, 200);
@@ -246,6 +263,73 @@ $app->group('/api', function (){
 		 		return $this->view->render($response, $res, 403);
 		 	}
 
+        });
+
+        //update task
+        $this->put('/tasks/{id:[0-9]+}', function ($request, $response, $args) {
+
+        	$auth = $request->getAttribute('user');
+			$params = $request->getParsedBody();
+			if(!$params) $params = [];	
+
+			$v = new Validator;
+			$v->required('name');
+
+			$result = $v->validate($params);
+
+			if(!$result->isValid()) {
+
+				$error = $result->getMessages();
+				$message = [];
+				foreach ($error as $key => $msg) {
+					foreach ($msg as $value) {
+						$message[$key] = $value;
+					}
+				}
+				$res = [
+					'status' => [
+						'code' => 400, 
+						'error' => true, 
+						'message' => $message
+						]
+					];
+			 	return $this->view->render($response, $res, 400);
+			}
+
+			$task = Model::factory('Task')->where('user_id', $auth->user_id)->find_one($args['id']);
+			if($task) {
+				$task->user_id = $auth->user_id;
+				$task->name = $params['name'];
+				$task->description = isset($params['description']) ? $params['description'] : $task->description;
+				if($task->save()) {
+					$res = [
+						'status' => [
+							'code' => 200, 
+							'error' => false, 
+							'message' => 'update task successfully'
+							]
+						];
+				 	return $this->view->render($response, $res, 200);
+				} else {
+					$res = [
+						'status' => [
+							'code' => 500, 
+							'error' => true, 
+							'message' => 'update task failed'
+							]
+						];
+				 	return $this->view->render($response, $res, 500);
+				}
+		 	} else {
+				$res = [
+					'status' => [
+						'code' => 403, 
+						'error' => true, 
+						'message' => 'forbidden access'
+						]
+				];
+		 		return $this->view->render($response, $res, 403);
+		 	}
         });
 
         // delete task

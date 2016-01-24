@@ -65,6 +65,16 @@ Cache-Control: no-cache
 Postman-Token: d2b11ba3-ac01-3608-96c2-e239f3f79c5e
 
 
+Get List Task With Limit
+
+GET /tasklist/public/api/v1/tasks?offset=0&limit=10 HTTP/1.1
+Host: localhost
+content-Type: application/json
+api-key: a22bbcd8c32575afe2f00d6907257703899330ee
+Cache-Control: no-cache
+Postman-Token: 38a2aefb-e16e-2167-c247-edb203ee05a9
+
+
 Get Detail Task
 
 GET /tasklist/public/api/v1/tasks/8 HTTP/1.1
@@ -73,6 +83,21 @@ content-Type: application/json
 api-key: a22bbcd8c32575afe2f00d6907257703899330ee
 Cache-Control: no-cache
 Postman-Token: b78aa45d-4074-9710-5a9b-7a29cc8b0755
+
+
+Update Task
+
+PUT /tasklist/public/api/v1/tasks/8 HTTP/1.1
+Host: localhost
+content-Type: application/json
+api-key: a22bbcd8c32575afe2f00d6907257703899330ee
+Cache-Control: no-cache
+Postman-Token: 1854a6d4-adc9-d043-fe99-750905e96051
+
+{
+    "name":"second task",
+    "description" : "this is second task"
+}
 
 
 Delete Task
