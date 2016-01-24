@@ -1,4 +1,4 @@
-# Tasklist is Simple Application with Slim Framework 3
+# Tasklist is Simple REST API App that built with Slim Framework 3
 
 This application is built using PHP 5.5.9, mysql 5.5.46 and Slim framework 3.
 
