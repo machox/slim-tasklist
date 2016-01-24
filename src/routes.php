@@ -18,15 +18,15 @@ $app->get('/', function ($request, $response, $args){
 });
 
 // API group
-$app->group('/api', function () use ($app){
+$app->group('/api', function (){
 
     // Version group
-    $this->group('/v1', function () use ($app){
+    $this->group('/v1', function (){
 
         // Register user
         $this->post('/users', function ($request, $response, $args) {
 
-			$params = $request->getParsedBody();        		
+			$params = $request->getParsedBody(); 		
 			if(!$params) $params = [];	
 
 			$v = new Validator;
@@ -206,7 +206,7 @@ $app->group('/api', function () use ($app){
         });
 
 		//list task
-        $this->get('/tasks', function ($request, $response, $args) use ($app){
+        $this->get('/tasks', function ($request, $response, $args) {
         	$auth = $request->getAttribute('user');
 			$user = Model::factory('User')->find_one($auth->user_id);
 			$tasks = $user->tasks()->find_array();
