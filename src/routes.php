@@ -184,6 +184,7 @@ $app->group('/api', function (){
 			$task->user_id = $auth->user_id;
 			$task->name = $params['name'];
 			$task->description = isset($params['description']) ? $params['description'] : null;
+			$task->status = 'new';
 			if($task->save()) {
 				$res = [
 					'status' => [
@@ -301,6 +302,7 @@ $app->group('/api', function (){
 				$task->user_id = $auth->user_id;
 				$task->name = $params['name'];
 				$task->description = isset($params['description']) ? $params['description'] : $task->description;
+				$task->status = isset($params['status']) ? $params['status'] : $task->status;
 				if($task->save()) {
 					$res = [
 						'status' => [
