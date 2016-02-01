@@ -96,7 +96,8 @@ Postman-Token: 1854a6d4-adc9-d043-fe99-750905e96051
 
 {
     "name":"second task",
-    "description" : "this is second task"
+    "description" : "this is second task",
+    "status":"done" 
 }
 
 
