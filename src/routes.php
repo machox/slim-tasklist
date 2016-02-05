@@ -68,8 +68,8 @@ $app->group('/api', function (){
 
 			$user = Model::factory('User')->create();
 			$user->email = $params['email'];
-			$user->password = sha1($params['password'] . $params['email']);
-			$user->api_key = sha1($user->password . time());
+			$user->password = password_hash($params['password'] . $params['email'], PASSWORD_DEFAULT);
+			$user->api_key = password_hash($params['password'] . time(), PASSWORD_DEFAULT);
 			if($user->save()) {
 				$res = [
 					'status' => [
@@ -123,9 +123,10 @@ $app->group('/api', function (){
 			 	return $this->view->render($response, $res, 400);
 			}
 
-			$user = Model::factory('User')->where('email', $params['email'])->where('password', sha1($params['password'] . $params['email']))->find_one();
+			$user = Model::factory('User')->where('email', $params['email'])->find_one();
 			if($user) {
-				$res = [
+				if (password_verify($params['password'] . $params['email'], $user->password)) {
+					$res = [
 					'status' => [
 						'code' => 200, 
 						'error' => false, 
@@ -136,17 +137,17 @@ $app->group('/api', function (){
 						'api_key' => $user->api_key
 						]
 					];
-			 	return $this->view->render($response, $res, 200);
-			} else {
-				$res = [
-					'status' => [
-						'code' => 400, 
-						'error' => true, 
-						'message' => 'login failed'
-						]
-					];
-			 	return $this->view->render($response, $res, 400);
+			 		return $this->view->render($response, $res, 200);
+				}
 			}
+			$res = [
+				'status' => [
+					'code' => 400, 
+					'error' => true, 
+					'message' => 'login failed'
+					]
+				];
+		 	return $this->view->render($response, $res, 400);
         });
 
         // add task
