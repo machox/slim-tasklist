@@ -21,7 +21,7 @@ Cache-Control: no-cache
 Postman-Token: df03ea43-3824-37eb-586c-95cab11fbe87
 
 {
-    "email":"bayoe13@gmail.com",
+    "email":"bayu@example.com",
     "password" : "12345"
 }
 
@@ -35,7 +35,7 @@ Cache-Control: no-cache
 Postman-Token: 4ac9548b-6a4d-d258-8f0e-85e27a774df7
 
 {
-    "email":"bayoe13@gmail.com",
+    "email":"bayu@example.com",
     "password" : "12345"
 }
 
